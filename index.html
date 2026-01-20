@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Blossom Notes - Нежный блог</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-spa"></i>
+                <h1>Blossom Notes</h1>
+            </div>
+            <p class="tagline">Нежный блог для вдохновения, красоты и мыслей</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <button class="nav-btn" id="homeBtn">
+                    <i class="fas fa-home"></i> Главная
+                </button>
+                <button class="nav-btn" id="newArticleBtn">
+                    <i class="fas fa-plus"></i> Новая статья
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Поиск по статьям...">
+            </div>
+        </nav>
+
+        <!-- Tags filter -->
+        <div class="tags-container" id="tagsFilter">
+            <div class="tag active" data-tag="all">Все темы</div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="mainContent">
+            <!-- Articles grid (default view) -->
+            <div class="articles-grid" id="articlesGrid"></div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: none;"></div>
+
+            <!-- Empty state -->
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-feather-alt empty-icon"></i>
+                <h2 class="empty-title">Пока нет статей</h2>
+                <p class="empty-text">Создайте свою первую запись в блоге, поделитесь мыслями, вдохновением или интересными находками.</p>
+                <button class="btn btn-primary" id="emptyStateBtn">
+                    <i class="fas fa-plus"></i> Создать первую статью
+                </button>
+            </div>
+        </div>
+
+        <!-- Article View (hidden by default) -->
+        <div class="article-view" id="articleView">
+            <!-- ArticleViewComponent будет динамически заполнять этот блок -->
+        </div>
+
+        <!-- Editor (hidden by default) -->
+        <div class="editor-container" id="editorContainer">
+            <div class="editor-header">
+                <h2 class="editor-title" id="editorTitle">Новая статья</h2>
+                <button class="btn btn-secondary" id="closeEditorBtn">
+                    <i class="fas fa-times"></i> Закрыть
+                </button>
+            </div>
+            
+            <div class="split-view">
+                <!-- Form section -->
+                <div class="form-section">
+                    <form id="articleForm">
+                        <div class="form-group">
+                            <label class="form-label" for="articleTitle">
+                                <i class="fas fa-heading"></i> Заголовок
+                            </label>
+                            <input type="text" id="articleTitle" class="form-input" placeholder="Введите заголовок статьи" minlength="5" required>
+                            <div class="error-message" id="titleError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="articleExcerpt">
+                                <i class="fas fa-align-left"></i> Анонс
+                            </label>
+                            <textarea id="articleExcerpt" class="form-textarea" placeholder="Краткое описание статьи"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="articleContent">
+                                <i class="fas fa-edit"></i> Содержание (Markdown)
+                            </label>
+                            <textarea id="articleContent" class="form-textarea" placeholder="Напишите свою статью здесь... Используйте Markdown для форматирования" required></textarea>
+                            <div class="error-message" id="contentError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="articleTags">
+                                <i class="fas fa-tags"></i> Теги (через запятую)
+                            </label>
+                            <input type="text" id="articleTags" class="form-input" placeholder="вдохновение, красота, мысли, стиль">
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Preview section -->
+                <div class="preview-section">
+                    <h3 class="preview-title">Предпросмотр</h3>
+                    <div class="preview-content" id="articlePreview">
+                        <p>Здесь будет отображаться предпросмотр вашей статьи...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="editor-actions">
+                <button class="btn btn-secondary" id="cancelBtn">
+                    <i class="fas fa-times"></i> Отмена
+                </button>
+                <button class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i> Опубликовать
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🌸 Blossom Notes &copy; 2026 | Нежный блог для вдохновляющих мыслей</p>
+        </footer>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle notification-icon"></i>
+        <div>
+            <div id="notificationTitle">Уведомление</div>
+            <div id="notificationMessage">Сообщение</div>
+        </div>
+    </div>
+
+    <!-- Delete confirmation modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <h3 class="modal-title">
+                <i class="fas fa-exclamation-triangle"></i> Удаление статьи
+            </h3>
+            <p class="modal-text" id="deleteModalText"></p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">Отмена</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
